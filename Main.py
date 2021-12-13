@@ -1,5 +1,6 @@
 import asyncio
 from bleak import BleakScanner, BleakClient
+import readchar
 
 device = None
 client = None
@@ -68,10 +69,14 @@ async def sendData():
     global client
 
     try:
-        while True:
-            data = input("Input data to send:")
-            await client.write_gatt_char(writeCharacteristic, data.encode("utf-8"))
-            print("\tSent.")
+        print("Input data to send")
+        while True:            
+            data = readchar.readkey()
+            if data in ('wsadop'):
+                await client.write_gatt_char(writeCharacteristic, data.encode("utf-8"))
+            elif data == '.':
+                print("Exiting...")
+                break
     except KeyboardInterrupt:
         print()
         return
